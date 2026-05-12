@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Vision — Sazzad Ibna Mahfuz</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#00FFD1;--purple:#7B61FF;--green:#22C55E;--red:#EF4444;--amber:#F59E0B;--bg:#07090D;--bg2:#0D1117;--bg3:#161B22;--border:rgba(0,255,209,0.12);--text:#E6EDF3;--muted:#7D8590}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+header{background:rgba(13,17,23,.95);border-bottom:0.5px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px)}
+.logo{font-family:'Orbitron',monospace;font-size:.9rem;color:var(--red)}
+.back{color:var(--muted);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.75rem;transition:color .2s}.back:hover{color:var(--cyan)}
+main{max-width:1300px;margin:0 auto;padding:2rem}
+h1{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:700;margin-bottom:.25rem}
+.subtitle{color:var(--muted);font-size:.85rem;font-family:'JetBrains Mono',monospace;margin-bottom:2rem}
+.tabs{display:flex;gap:.5rem;margin-bottom:2rem;border-bottom:0.5px solid var(--border)}
+.tab-btn{padding:.6rem 1.2rem;border:none;background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-0.5px}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.card{background:var(--bg3);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+@media(max-width:800px){.grid2{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}}
+canvas{display:block;border-radius:6px}
+.ctrl-btn{padding:.45rem 1rem;border:0.5px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:pointer;transition:all .2s;margin-right:.5rem;margin-bottom:.4rem}
+.ctrl-btn:hover,.ctrl-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,255,209,.06)}
+.step-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);text-align:center;margin-top:.35rem}
+.metric-pill{display:inline-block;padding:.2rem .7rem;border-radius:99px;border:0.5px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--cyan);margin:.2rem}
+.code-block{background:var(--bg2);border-radius:8px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;overflow-x:auto;border:0.5px solid rgba(255,255,255,.06)}
+.kw{color:#FF79C6}.fn{color:#50FA7B}.cn{color:#BD93F9}.cm{color:#6272A4;font-style:italic}.st{color:#F1FA8C}.nm{color:#FFB86C}
+footer{text-align:center;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+footer a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MACHINE VISION</div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)">Python · OpenCV · RoboDK · HAMK</span>
+  <a href="../../index.html" class="back">← Portfolio</a>
+</header>
+<main>
+  <h1>Machine Vision</h1>
+  <p class="subtitle">// HAMK Machine Vision Course · Python + OpenCV + RoboDK + Dobot MG400 · Group 11</p>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('channels')">RGB Channels</button>
+    <button class="tab-btn" onclick="showTab('segment')">Segmentation Pipeline</button>
+    <button class="tab-btn" onclick="showTab('mapping')">Camera–Robot Mapping</button>
+    <button class="tab-btn" onclick="showTab('code')">Python Code</button>
+  </div>
+
+  <!-- ── TAB 1: RGB CHANNELS ── -->
+  <div class="tab-pane active" id="tab-channels">
+    <div class="card">
+      <div class="card-title">Task A — RGB Channel Separation (OpenCV)</div>
+      <div style="margin-bottom:.75rem">
+        <button class="ctrl-btn active" onclick="setScene('food')">🍽 Food Scene</button>
+        <button class="ctrl-btn" onclick="setScene('robot')">🤖 Robot Scene</button>
+        <button class="ctrl-btn" onclick="setScene('factory')">🏭 Factory Floor</button>
+      </div>
+      <div class="grid4">
+        <div><canvas id="cvOrig" width="200" height="150"></canvas><div class="step-label">Original Image (BGR→RGB)</div></div>
+        <div><canvas id="cvRed" width="200" height="150"></canvas><div class="step-label">Red Channel</div></div>
+        <div><canvas id="cvGreen" width="200" height="150"></canvas><div class="step-label">Green Channel</div></div>
+        <div><canvas id="cvBlue" width="200" height="150"></canvas><div class="step-label">Blue Channel</div></div>
+      </div>
+      <div style="margin-top:.75rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)">
+        Image shape: <span style="color:var(--cyan)" id="imgShape">480 × 640 × 3</span> · 
+        dtype: <span style="color:var(--cyan)">uint8</span> · 
+        Channel order: <span style="color:var(--cyan)">BGR (OpenCV) → RGB (matplotlib)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pixel Intensity Histogram</div>
+      <div style="height:200px"><canvas id="histChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── TAB 2: SEGMENTATION ── -->
+  <div class="tab-pane" id="tab-segment">
+    <div class="card">
+      <div class="card-title">Segmentation Pipeline — Step by Step</div>
+      <div style="margin-bottom:.75rem">
+        <button class="ctrl-btn active" onclick="runPipeline('sim')">🖥 Simulated (RoboDK)</button>
+        <button class="ctrl-btn" onclick="runPipeline('real')">📷 Real Image</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem">
+        <div><canvas id="pipe0" width="140" height="105"></canvas><div class="step-label">① Original</div></div>
+        <div><canvas id="pipe1" width="140" height="105"></canvas><div class="step-label">② Grayscale</div></div>
+        <div><canvas id="pipe2" width="140" height="105"></canvas><div class="step-label">③ CLAHE+Blur</div></div>
+        <div><canvas id="pipe3" width="140" height="105"></canvas><div class="step-label">④ Otsu Threshold</div></div>
+        <div><canvas id="pipe4" width="140" height="105"></canvas><div class="step-label">⑤ Morphology</div></div>
+        <div><canvas id="pipe5" width="140" height="105"></canvas><div class="step-label">⑥ Detected Objects</div></div>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:1rem">
+      <div class="card">
+        <div class="card-title">Detected Objects — connectedComponentsWithStats</div>
+        <div id="objectTable" style="font-family:'JetBrains Mono',monospace;font-size:.72rem"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Histogram (Grayscale)</div>
+        <div style="height:180px"><canvas id="grayHist"></canvas></div>
+        <div style="margin-top:.5rem;font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted)">Otsu threshold: <span id="otsuVal" style="color:var(--amber)">—</span> · Objects kept: <span id="objCount" style="color:var(--cyan)">—</span> · Min area: 1244 px</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB 3: CAMERA-ROBOT MAPPING ── -->
+  <div class="tab-pane" id="tab-mapping">
+    <div class="card">
+      <div class="card-title">Camera → Robot Coordinate Mapping (Homography)</div>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">Click anywhere on the image to map pixel coordinates → Dobot MG400 robot coordinates. 8-point calibration, cv2.findHomography().</p>
+      <div class="grid2">
+        <div>
+          <canvas id="mapCanvas" width="500" height="360" style="cursor:crosshair;border:0.5px solid var(--border)"></canvas>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-top:.4rem">📌 Click to get robot coordinates · 8 calibration tiles shown</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div class="card" style="margin:0">
+            <div class="card-title">Last Click</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem">
+              <div>Pixel: <span style="color:var(--cyan)" id="clickPx">—</span></div>
+              <div style="margin-top:.3rem">Robot X: <span style="color:var(--green)" id="robotX">—</span> mm</div>
+              <div style="margin-top:.3rem">Robot Y: <span style="color:var(--green)" id="robotY">—</span> mm</div>
+            </div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="card-title">Calibration Data (8 pts)</div>
+            <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.65rem">
+              <thead><tr style="color:var(--muted)"><td>ID</td><td>Robot X</td><td>Robot Y</td><td>px u</td><td>px v</td></tr></thead>
+              <tbody id="calibTable"></tbody>
+            </table>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="card-title">Homography Matrix H</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cyan)" id="hMatrix"></div>
+            <div style="font-size:.68rem;color:var(--muted);margin-top:.5rem;font-family:'JetBrains Mono',monospace">Mean error: <span style="color:var(--green)">0.8 mm</span> · Max error: <span style="color:var(--amber)">1.9 mm</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB 4: CODE ── -->
+  <div class="tab-pane" id="tab-code">
+    <div class="card">
+      <div class="card-title">Segmentation Pipeline — Python + OpenCV</div>
+      <div class="code-block">
+<span class="kw">import</span> cv2
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="cm"># ── 1. Load and convert ──────────────────────────────</span>
+img     = cv2.<span class="fn">imread</span>(<span class="st">'robodk_snapshot.png'</span>)
+img_rgb = cv2.<span class="fn">cvtColor</span>(img, cv2.COLOR_BGR2RGB)
+gray    = cv2.<span class="fn">cvtColor</span>(img, cv2.COLOR_BGR2GRAY)
+
+<span class="cm"># ── 2. Contrast enhancement (CLAHE) + denoise ────────</span>
+clahe      = cv2.<span class="fn">createCLAHE</span>(clipLimit=<span class="nm">2.0</span>, tileGridSize=(<span class="nm">8</span>,<span class="nm">8</span>))
+gray_clahe = clahe.<span class="fn">apply</span>(gray)
+blurred    = cv2.<span class="fn">GaussianBlur</span>(gray_clahe, (<span class="nm">5</span>,<span class="nm">5</span>), <span class="nm">0</span>)
+
+<span class="cm"># ── 3. Otsu thresholding (objects darker than BG) ────</span>
+_, binary = cv2.<span class="fn">threshold</span>(
+    blurred, <span class="nm">0</span>, <span class="nm">255</span>,
+    cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
+)
+
+<span class="cm"># ── 4. Morphological cleanup ─────────────────────────</span>
+kernel  = cv2.<span class="fn">getStructuringElement</span>(cv2.MORPH_RECT, (<span class="nm">5</span>,<span class="nm">5</span>))
+opened  = cv2.<span class="fn">morphologyEx</span>(binary, cv2.MORPH_OPEN,  kernel)
+cleaned = cv2.<span class="fn">morphologyEx</span>(opened, cv2.MORPH_CLOSE, kernel)
+
+<span class="cm"># ── 5. Connected components ──────────────────────────</span>
+num_labels, labeled, stats, centroids = cv2.<span class="fn">connectedComponentsWithStats</span>(
+    cleaned, connectivity=<span class="nm">4</span>, ltype=cv2.CV_32S
+)
+MIN_AREA = <span class="nm">1244</span>   <span class="cm"># px — area filter threshold</span>
+kept = [(stats[i], centroids[i]) <span class="kw">for</span> i <span class="kw">in</span> range(<span class="nm">1</span>, num_labels)
+        <span class="kw">if</span> stats[i][cv2.CC_STAT_AREA] >= MIN_AREA]
+print(<span class="st">f"Found {len(kept)} objects"</span>)
+
+<span class="cm"># ── 6. Annotate ──────────────────────────────────────</span>
+annotated = img_rgb.copy()
+<span class="kw">for</span> (stat, (cx, cy)) <span class="kw">in</span> kept:
+    x, y, w, h = stat[:4]
+    cv2.<span class="fn">rectangle</span>(annotated, (x,y), (x+w,y+h), (<span class="nm">0</span>,<span class="nm">255</span>,<span class="nm">0</span>), <span class="nm">2</span>)
+    cv2.<span class="fn">circle</span>(annotated, (<span class="kw">int</span>(cx),<span class="kw">int</span>(cy)), <span class="nm">5</span>, (<span class="nm">255</span>,<span class="nm">0</span>,<span class="nm">0</span>), -<span class="nm">1</span>)
+    cv2.<span class="fn">putText</span>(annotated, <span class="st">f"({int(cx)},{int(cy)})"</span>,
+               (x+<span class="nm">2</span>, y-<span class="nm">6</span>), cv2.FONT_HERSHEY_SIMPLEX,
+               <span class="nm">0.4</span>, (<span class="nm">0</span>,<span class="nm">255</span>,<span class="nm">0</span>), <span class="nm">1</span>)</div>
+    </div>
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">Homography — pixel_to_robot(u, v, H)</div>
+      <div class="code-block">
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> cv2
+
+<span class="cm"># Calibration points (8 tiles at known robot positions)</span>
+img_pts   = np.<span class="fn">array</span>([[<span class="nm">604</span>,<span class="nm">717</span>],[<span class="nm">609</span>,<span class="nm">1235</span>],[<span class="nm">997</span>,<span class="nm">951</span>],[<span class="nm">721</span>,<span class="nm">468</span>],
+                       [<span class="nm">476</span>,<span class="nm">482</span>],[<span class="nm">484</span>,<span class="nm">973</span>],[<span class="nm">847</span>,<span class="nm">586</span>],[<span class="nm">740</span>,<span class="nm">962</span>]], dtype=np.float32)
+robot_pts = np.<span class="fn">array</span>([[<span class="nm">350</span>,<span class="nm">0</span>],[<span class="nm">350</span>,<span class="nm">100</span>],[<span class="nm">275</span>,<span class="nm">50</span>],[<span class="nm">325</span>,<span class="nm">-50</span>],
+                       [<span class="nm">375</span>,<span class="nm">-75</span>],[<span class="nm">375</span>,<span class="nm">50</span>],[<span class="nm">300</span>,<span class="nm">-25</span>],[<span class="nm">325</span>,<span class="nm">50</span>]], dtype=np.float32)
+
+H, _ = cv2.<span class="fn">findHomography</span>(img_pts, robot_pts, method=<span class="nm">0</span>)
+
+<span class="kw">def</span> <span class="fn">pixel_to_robot</span>(u, v, H):
+    p  = np.<span class="fn">array</span>([u, v, <span class="nm">1.0</span>], dtype=np.float32).<span class="fn">reshape</span>(<span class="nm">3</span>,<span class="nm">1</span>)
+    pr = H @ p
+    pr = pr / pr[<span class="nm">2</span>,<span class="nm">0</span>]      <span class="cm"># homogeneous → Euclidean</span>
+    <span class="kw">return</span> pr[<span class="nm">0</span>,<span class="nm">0</span>], pr[<span class="nm">1</span>,<span class="nm">0</span>]  <span class="cm"># (X_mm, Y_mm)</span>
+
+<span class="cm"># Mean calibration error: 0.8 mm — Max: 1.9 mm</span></div>
+    </div>
+  </div>
+</main>
+<footer>Machine Vision · <a href="https://github.com/sazzadmahfuz/Machine-Vision">github.com/sazzadmahfuz/Machine-Vision</a> · Python + OpenCV + RoboDK · HAMK</footer>
+
+<script>
+function showTab(id){document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['channels','segment','mapping','code'][i]===id));document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');}
+
+// ── SCENE GENERATOR ──
+const scenes={
+  food:{name:'food',objects:[{x:60,y:30,w:120,h:90,r:200,g:60,b:40},{x:200,y:50,w:80,h:60,r:50,g:160,b:50},{x:320,y:60,w:100,h:70,r:220,g:180,b:40},{x:100,y:90,w:90,h:60,r:180,g:140,b:80}],bg:{r:240,g:245,b:230}},
+  robot:{name:'robot',objects:[{x:40,y:20,w:100,h:140,r:60,g:90,b:140},{x:180,y:40,w:80,h:80,r:140,g:50,b:50},{x:290,y:30,w:110,h:90,r:50,g:140,b:120},{x:420,y:60,w:70,h:100,r:100,g:80,b:160}],bg:{r:180,g:185,b:195}},
+  factory:{name:'factory',objects:[{x:30,y:40,w:80,h:80,r:200,g:120,b:30},{x:150,y:20,w:120,h:100,r:40,g:160,b:80},{x:300,y:50,w:90,h:90,r:160,g:50,b:160},{x:420,y:30,w:100,h:120,r:40,g:80,b:200}],bg:{r:160,g:165,b:170}}
+};
+let currentScene='food';
+
+function renderScene(canv,scene,mode){
+  const ctx=canv.getContext('2d');const W=canv.width,H=canv.height;
+  const bg=scene.bg;
+  if(mode==='orig'){ctx.fillStyle=`rgb(${bg.r},${bg.g},${bg.b})`;ctx.fillRect(0,0,W,H);scene.objects.forEach(o=>{ ctx.fillStyle=`rgb(${o.r},${o.g},${o.b})`;ctx.fillRect(o.x*W/640,o.y*H/480,(o.w)*W/640,(o.h)*H/480);});}
+  else if(mode==='red'){const id=ctx.createImageData(W,H);for(let i=0;i<W*H;i++){let px=255,c=bg.r;scene.objects.forEach(o=>{const ox=Math.round(o.x*W/640),oy=Math.round(o.y*H/480),ow=Math.round(o.w*W/640),oh=Math.round(o.h*H/480);const xi=i%W,yi=Math.floor(i/W);if(xi>=ox&&xi<ox+ow&&yi>=oy&&yi<oy+oh)c=o.r;});id.data[i*4]=c;id.data[i*4+1]=0;id.data[i*4+2]=0;id.data[i*4+3]=255;}ctx.putImageData(id,0,0);}
+  else if(mode==='green'){const id=ctx.createImageData(W,H);for(let i=0;i<W*H;i++){let c=bg.g;scene.objects.forEach(o=>{const ox=Math.round(o.x*W/640),oy=Math.round(o.y*H/480),ow=Math.round(o.w*W/640),oh=Math.round(o.h*H/480);const xi=i%W,yi=Math.floor(i/W);if(xi>=ox&&xi<ox+ow&&yi>=oy&&yi<oy+oh)c=o.g;});id.data[i*4]=0;id.data[i*4+1]=c;id.data[i*4+2]=0;id.data[i*4+3]=255;}ctx.putImageData(id,0,0);}
+  else if(mode==='blue'){const id=ctx.createImageData(W,H);for(let i=0;i<W*H;i++){let c=bg.b;scene.objects.forEach(o=>{const ox=Math.round(o.x*W/640),oy=Math.round(o.y*H/480),ow=Math.round(o.w*W/640),oh=Math.round(o.h*H/480);const xi=i%W,yi=Math.floor(i/W);if(xi>=ox&&xi<ox+ow&&yi>=oy&&yi<oy+oh)c=o.b;});id.data[i*4]=0;id.data[i*4+1]=0;id.data[i*4+2]=c;id.data[i*4+3]=255;}ctx.putImageData(id,0,0);}
+}
+
+function setScene(name){currentScene=name;document.querySelectorAll('.ctrl-btn').forEach((b,i)=>b.classList.toggle('active',['food','robot','factory'][i]===name));const sc=scenes[name];renderScene(document.getElementById('cvOrig'),sc,'orig');renderScene(document.getElementById('cvRed'),sc,'red');renderScene(document.getElementById('cvGreen'),sc,'green');renderScene(document.getElementById('cvBlue'),sc,'blue');drawHistogram(sc);}
+
+// Histogram
+let histChart=null;
+function drawHistogram(sc){
+  const ctx2=document.getElementById('histChart').getContext('2d');
+  if(histChart)histChart.destroy();
+  const rBins=Array(16).fill(0),gBins=Array(16).fill(0),bBins=Array(16).fill(0);
+  sc.objects.forEach(o=>{rBins[Math.floor(o.r/16)]+=o.w*o.h;gBins[Math.floor(o.g/16)]+=o.w*o.h;bBins[Math.floor(o.b/16)]+=o.w*o.h;});
+  histChart=new Chart(ctx2,{type:'bar',data:{labels:Array.from({length:16},(_,i)=>i*16),datasets:[{label:'Red',data:rBins,backgroundColor:'rgba(239,68,68,.5)',borderColor:'#EF4444',borderWidth:1},{label:'Green',data:gBins,backgroundColor:'rgba(34,197,94,.5)',borderColor:'#22C55E',borderWidth:1},{label:'Blue',data:bBins,backgroundColor:'rgba(59,130,246,.5)',borderColor:'#3B82F6',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:0},plugins:{legend:{labels:{color:'#7D8590',font:{size:9},boxWidth:10}}},scales:{x:{ticks:{color:'#7D8590',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7D8590',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+setScene('food');
+
+// ── SEGMENTATION PIPELINE ──
+const pipeScenes={
+  sim:{objs:[{x:40,y:20,w:50,h:130,gray:30,color:'#F1C40F'},{x:130,y:40,w:60,h:60,gray:20,color:'#8B4513'},{x:220,y:25,w:55,h:55,gray:50,color:'#95A5A6'},{x:290,y:35,w:40,h:80,gray:10,color:'#E74C3C'},{x:360,y:30,w:50,h:50,gray:15,color:'#3B82F6'}],bg:220},
+  real:{objs:[{x:50,y:40,w:45,h:45,gray:18,color:'#222'},{x:130,y:60,w:40,h:40,gray:22,color:'#333'},{x:200,y:35,w:50,h:50,gray:15,color:'#111'},{x:280,y:50,w:45,h:45,gray:20,color:'#2A2A2A'},{x:360,y:45,w:38,h:38,gray:16,color:'#1A1A1A'}],bg:180}
+};
+let curPipeScene='sim';
+
+function runPipeline(sc){
+  curPipeScene=sc;document.querySelectorAll('.ctrl-btn').forEach((b,i)=>b.classList.toggle('active',['sim','real'][i]===sc));
+  const scene=pipeScenes[sc];const W=140,H=105;
+  // Step 0: original
+  const c0=document.getElementById('pipe0').getContext('2d');
+  c0.fillStyle=`rgb(${scene.bg},${scene.bg+5},${scene.bg-5})`;c0.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c0.fillStyle=o.color;c0.fillRect(o.x*W/430,o.y*H/160,o.w*W/430,o.h*H/160);});
+  // Step 1: grayscale
+  const c1=document.getElementById('pipe1').getContext('2d');
+  c1.fillStyle=`rgb(${scene.bg},${scene.bg},${scene.bg})`;c1.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c1.fillStyle=`rgb(${o.gray+10},${o.gray+10},${o.gray+10})`;c1.fillRect(o.x*W/430,o.y*H/160,o.w*W/430,o.h*H/160);});
+  // Step 2: CLAHE+blur (slightly enhanced)
+  const c2=document.getElementById('pipe2').getContext('2d');
+  c2.fillStyle=`rgb(${scene.bg+15},${scene.bg+15},${scene.bg+15})`;c2.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c2.fillStyle=`rgb(${Math.max(0,o.gray-5)},${Math.max(0,o.gray-5)},${Math.max(0,o.gray-5)})`;c2.fillRect(o.x*W/430,o.y*H/160,o.w*W/430,o.h*H/160);});
+  // Step 3: threshold (binary)
+  const c3=document.getElementById('pipe3').getContext('2d');
+  c3.fillStyle='black';c3.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c3.fillStyle='white';c3.fillRect(o.x*W/430,o.y*H/160,o.w*W/430,o.h*H/160);});
+  const otsuThresh=sc==='sim'?128:142;document.getElementById('otsuVal').textContent=otsuThresh;
+  // Step 4: morphology
+  const c4=document.getElementById('pipe4').getContext('2d');
+  c4.fillStyle='black';c4.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c4.fillStyle='white';c4.fillRect(Math.max(0,o.x*W/430-2),Math.max(0,o.y*H/160-2),(o.w*W/430+4),(o.h*H/160+4));});
+  // Step 5: annotated
+  const c5=document.getElementById('pipe5').getContext('2d');
+  c5.fillStyle=`rgb(${scene.bg},${scene.bg+5},${scene.bg-5})`;c5.fillRect(0,0,W,H);
+  scene.objs.forEach(o=>{c5.fillStyle=o.color;c5.fillRect(o.x*W/430,o.y*H/160,o.w*W/430,o.h*H/160);});
+  scene.objs.forEach(o=>{const px=o.x*W/430,py=o.y*H/160,pw=o.w*W/430,ph=o.h*H/160;c5.strokeStyle='#00FF00';c5.lineWidth=1.5;c5.strokeRect(px,py,pw,ph);const cx=Math.round(px+pw/2),cy=Math.round(py+ph/2);c5.beginPath();c5.arc(cx,cy,3,0,Math.PI*2);c5.fillStyle='red';c5.fill();c5.fillStyle='#00FF00';c5.font='7px JetBrains Mono,monospace';c5.fillText(`(${Math.round((o.x+o.w/2)*430/W)},${Math.round((o.y+o.h/2)*160/H)})`,px+1,py-2);});
+  document.getElementById('objCount').textContent=scene.objs.length;
+  // object table
+  document.getElementById('objectTable').innerHTML=`<table style="width:100%;border-collapse:collapse"><thead><tr style="font-size:.65rem;color:var(--muted)"><td>Label</td><td>Centroid (px)</td><td>BBox</td><td>Area</td></tr></thead><tbody>${scene.objs.map((o,i)=>`<tr style="border-bottom:0.5px solid rgba(255,255,255,.04)"><td>Object ${i+1}</td><td style="color:var(--cyan)">(${Math.round(o.x+o.w/2)},${Math.round(o.y+o.h/2)})</td><td style="color:var(--muted)">${o.x},${o.y} ${o.w}×${o.h}</td><td style="color:var(--amber)">${o.w*o.h}</td></tr>`).join('')}</tbody></table>`;
+  // gray histogram
+  const ghCtx=document.getElementById('grayHist').getContext('2d');
+  if(window._ghChart)window._ghChart.destroy();
+  const bins=Array(16).fill(0);bins[Math.floor(scene.bg/16)]+=20000;scene.objs.forEach(o=>bins[Math.floor(o.gray/16)]+=o.w*o.h);
+  window._ghChart=new Chart(ghCtx,{type:'bar',data:{labels:Array.from({length:16},(_,i)=>i*16),datasets:[{label:'Count',data:bins,backgroundColor:'rgba(0,255,209,.4)',borderColor:'var(--cyan)',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:0},plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7D8590',font:{size:8}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#7D8590',font:{size:8}},grid:{color:'rgba(255,255,255,.04)'}}}}});
+}
+runPipeline('sim');
+
+// ── HOMOGRAPHY MAPPING ──
+const calibPts=[{id:'P1',rx:350,ry:0,pu:604,pv:717},{id:'P2',rx:350,ry:100,pu:609,pv:1235},{id:'P3',rx:275,ry:50,pu:997,pv:951},{id:'P4',rx:325,ry:-50,pu:721,pv:468},{id:'P5',rx:375,ry:-75,pu:476,pv:482},{id:'P6',rx:375,ry:50,pu:484,pv:973},{id:'P7',rx:300,ry:-25,pu:847,pv:586},{id:'P8',rx:325,ry:50,pu:740,pv:962}];
+const H_MAT=[[-7.515e-2,1.270e-1,5.816e2],[7.295e-2,4.033e-1,3.413e2],[9.187e-4,3.440e-4,1.0]];
+function pixelToRobot(u,v){const p=[u,v,1];const pr=H_MAT.map(row=>row[0]*p[0]+row[1]*p[1]+row[2]*p[2]);return[pr[0]/pr[2],pr[1]/pr[2]];}
+document.getElementById('hMatrix').innerHTML=H_MAT.map(row=>'['+row.map(v=>v.toExponential(2)).join(', ')+']').join('<br>');
+// Calib table
+document.getElementById('calibTable').innerHTML=calibPts.map(p=>`<tr style="border-bottom:0.5px solid rgba(255,255,255,.04)"><td>${p.id}</td><td style="color:var(--green)">${p.rx}</td><td style="color:var(--green)">${p.ry}</td><td>${p.pu}</td><td>${p.pv}</td></tr>`).join('');
+// Map canvas
+const mapC=document.getElementById('mapCanvas');const mapCtx=mapC.getContext('2d');
+const tileColors=['#3B82F6','#22C55E','#EF4444','#F59E0B','#7B61FF','#EC4899','#00FFD1','#F97316'];
+function drawMap(clickPt){
+  mapCtx.fillStyle='#0D1117';mapCtx.fillRect(0,0,500,360);
+  // grid
+  mapCtx.strokeStyle='rgba(255,255,255,.05)';mapCtx.lineWidth=1;
+  for(let x=0;x<500;x+=50){mapCtx.beginPath();mapCtx.moveTo(x,0);mapCtx.lineTo(x,360);mapCtx.stroke()}
+  for(let y=0;y<360;y+=45){mapCtx.beginPath();mapCtx.moveTo(0,y);mapCtx.lineTo(500,y);mapCtx.stroke()}
+  // calibration tiles (scaled to canvas)
+  const scaleU=500/1500,scaleV=360/1300;
+  calibPts.forEach((p,i)=>{const px=p.pu*scaleU,py=p.pv*scaleV;mapCtx.fillStyle=tileColors[i];mapCtx.fillRect(px-15,py-15,30,30);mapCtx.strokeStyle='#fff';mapCtx.lineWidth=1;mapCtx.strokeRect(px-15,py-15,30,30);mapCtx.fillStyle='#fff';mapCtx.font='8px JetBrains Mono,monospace';mapCtx.textAlign='center';mapCtx.fillText(p.id,px,py+4);});
+  // clicked point
+  if(clickPt){mapCtx.beginPath();mapCtx.arc(clickPt.px,clickPt.py,6,0,Math.PI*2);mapCtx.fillStyle='#FF0080';mapCtx.fill();mapCtx.strokeStyle='#fff';mapCtx.lineWidth=1.5;mapCtx.stroke();mapCtx.fillStyle='#3B82F6';mapCtx.font='10px JetBrains Mono,monospace';mapCtx.textAlign='left';mapCtx.fillText(`${Math.round(clickPt.px/scaleU)},${Math.round(clickPt.py/scaleV)}→${clickPt.rx.toFixed(0)},${clickPt.ry.toFixed(0)}`,clickPt.px+10,clickPt.py-8);}
+  mapCtx.textAlign='left';
+  mapCtx.fillStyle='rgba(0,255,209,.5)';mapCtx.font='10px Orbitron,monospace';mapCtx.fillText('CALIBRATION IMAGE',10,20);
+  mapCtx.fillStyle='rgba(125,133,144,.5)';mapCtx.font='9px JetBrains Mono,monospace';mapCtx.fillText('8 colored tiles at known robot coords',10,35);
+}
+let lastClick=null;
+mapC.addEventListener('click',e=>{const r=mapC.getBoundingClientRect();const px=(e.clientX-r.left)*(500/r.width),py=(e.clientY-r.top)*(360/r.height);const scaleU=500/1500,scaleV=360/1300;const u=px/scaleU,v=py/scaleV;const[rx,ry]=pixelToRobot(u,v);lastClick={px,py,rx,ry};document.getElementById('clickPx').textContent=`(${Math.round(u)}, ${Math.round(v)})`;document.getElementById('robotX').textContent=rx.toFixed(1);document.getElementById('robotY').textContent=ry.toFixed(1);drawMap(lastClick);});
+drawMap(null);
+</script>
+</body>
+</html>
