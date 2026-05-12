@@ -118,6 +118,84 @@ The primary objectives of this project were:
 
 ---
 
+# 🖼️ Project Demonstration
+
+This project combines robotics, computer vision, image segmentation, and camera calibration into a complete industrial machine vision workflow.
+
+The following screenshots demonstrate the complete processing pipeline from image acquisition to robot coordinate mapping and visualization.
+
+---
+
+<table align="center">
+<tr>
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(1).png" width="95%">
+
+### RGB Channel Separation
+
+Red, Green, and Blue channel extraction using OpenCV for color analysis and feature visibility evaluation.
+
+</td>
+
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(2).png" width="95%">
+
+### Segmentation Pipeline
+
+Thresholding, grayscale conversion, CLAHE enhancement, and binary segmentation workflow.
+
+</td>
+</tr>
+
+<tr>
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(3).png" width="95%">
+
+### Object Detection & Morphology
+
+Connected component analysis, contour extraction, morphology cleanup, and centroid detection.
+
+</td>
+
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(4).png" width="95%">
+
+### Coordinate Mapping
+
+Pixel-to-robot coordinate transformation using homography calibration techniques.
+
+</td>
+</tr>
+
+<tr>
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(5).png" width="95%">
+
+### Homography Calibration
+
+Robot-camera calibration system for industrial coordinate transformation and workspace mapping.
+
+</td>
+
+<td align="center" width="50%">
+
+<img src="Pictures/1%20(6).png" width="95%">
+
+### Interactive Dashboard
+
+Custom visualization dashboard with segmentation preview and coordinate monitoring tools.
+
+</td>
+</tr>
+</table>
+
+---
+
 # 🏗️ System Architecture
 
 ```text
@@ -154,8 +232,6 @@ Robot Coordinates (X,Y)
      ▼
 Pick-and-Place Ready
 ```
-
----
 
 # ⚙️ Technologies Used
 
