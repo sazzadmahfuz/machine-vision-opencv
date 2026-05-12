@@ -53,56 +53,6 @@ The system simulates an industrial robotic vision pipeline capable of:
 
 ---
 
-# 🖼️ Project Preview
-
-## 🔹 RGB Channel Separation
-
-<p align="center">
-  <img src="Pictures/1%20(1).png" width="850">
-</p>
-
----
-
-## 🔹 Segmentation Pipeline
-
-<p align="center">
-  <img src="Pictures/1%20(2).png" width="850">
-</p>
-
----
-
-## 🔹 Object Detection & Morphology
-
-<p align="center">
-  <img src="Pictures/1%20(3).png" width="850">
-</p>
-
----
-
-## 🔹 Camera → Robot Coordinate Mapping
-
-<p align="center">
-  <img src="Pictures/1%20(4).png" width="850">
-</p>
-
----
-
-## 🔹 Homography Calibration System
-
-<p align="center">
-  <img src="Pictures/1%20(5).png" width="850">
-</p>
-
----
-
-## 🔹 Interactive Machine Vision Dashboard
-
-<p align="center">
-  <img src="Pictures/1%20(6).png" width="850">
-</p>
-
----
-
 # 🎯 Objectives
 
 The primary objectives of this project were:
@@ -232,6 +182,8 @@ Robot Coordinates (X,Y)
      ▼
 Pick-and-Place Ready
 ```
+
+---
 
 # ⚙️ Technologies Used
 
@@ -595,97 +547,6 @@ machine-vision-opencv/
 └── calibration/
 ```
 
----
-
-# 🚀 Installation
-
-## Clone Repository
-
-```bash
-git clone https://github.com/sazzadmahfuz/machine-vision-opencv.git
-```
-
----
-
-## Navigate to Folder
-
-```bash
-cd machine-vision-opencv
-```
-
----
-
-## Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
----
-
-## Activate Environment
-
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### Linux / MacOS
-
-```bash
-source venv/bin/activate
-```
-
----
-
-## Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-# ▶️ Run Project
-
-## Launch Dashboard
-
-```bash
-open index.html
-```
-
-or double-click:
-
-```text
-index.html
-```
-
----
-
-# 📦 Requirements
-
-```txt
-opencv-python>=4.5.0
-numpy>=1.19.0
-matplotlib>=3.3.0
-```
-
----
-
-# 🧪 Example Output
-
-```text
-Found 6 objects
-Centroid: (341,74)
-Centroid: (414,356)
-
-Mean error (mm): 0.8
-Max error (mm): 1.9
-```
-
----
-
 # 📚 Academic Context
 
 This project combines concepts from:
@@ -746,30 +607,9 @@ This project helped develop practical skills in:
 Bachelor of Engineering — ICT Robotics  
 Häme University of Applied Sciences (HAMK)  
 Finland
-
-### 🌐 Links
-
-- GitHub: https://github.com/sazzadmahfuz
-- LinkedIn: https://linkedin.com/in/sazzad-ibna-mahfuz-5311a61b4
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
+[Portfolio](https://sazzadmahfuz.github.io) · [LinkedIn](https://www.linkedin.com/in/sazzad-mahfuz) · [GitHub](https://github.com/sazzadmahfuz)
 
 
----
-
-# 📌 Repository Status
-
-✅ Completed  
-✅ Documented  
-✅ Visualized  
-✅ GitHub Ready  
-✅ Portfolio Ready
-
----
 
 <div align="center">
 
