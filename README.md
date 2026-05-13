@@ -1,4 +1,4 @@
-# 🤖 Machine Vision using OpenCV, RoboDK & Dobot MG400
+# Machine Vision using OpenCV, RoboDK & Dobot MG400
 
 <div align="center">
 
