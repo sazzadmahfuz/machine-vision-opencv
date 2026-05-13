@@ -2,6 +2,7 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-00FFD1?style=for-the-badge)](https://sazzadmahfuz.github.io/machine-vision-opencv)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![OpenCV](https://img.shields.io/badge/OpenCV-Computer_Vision-green?style=for-the-badge&logo=opencv)
 ![RoboDK](https://img.shields.io/badge/RoboDK-Robot_Simulation-orange?style=for-the-badge)
@@ -23,7 +24,7 @@ Häme University of Applied Sciences (HAMK), Finland
 
 ---
 
-# 📌 Project Overview
+# Project Overview
 
 This project demonstrates a complete **Machine Vision workflow** for robotic applications using:
 
@@ -53,7 +54,7 @@ The system simulates an industrial robotic vision pipeline capable of:
 
 ---
 
-# 🎯 Objectives
+# Objectives
 
 The primary objectives of this project were:
 
@@ -68,7 +69,7 @@ The primary objectives of this project were:
 
 ---
 
-# 🖼️ Project Demonstration
+# Project Demonstration
 
 This project combines robotics, computer vision, image segmentation, and camera calibration into a complete industrial machine vision workflow.
 
@@ -146,7 +147,7 @@ Custom visualization dashboard with segmentation preview and coordinate monitori
 
 ---
 
-# 🏗️ System Architecture
+# System Architecture
 
 ```text
 Camera Image
@@ -185,7 +186,7 @@ Pick-and-Place Ready
 
 ---
 
-# ⚙️ Technologies Used
+# Technologies Used
 
 | Technology | Purpose |
 |---|---|
@@ -200,9 +201,9 @@ Pick-and-Place Ready
 
 ---
 
-# 🧠 Machine Vision Concepts Implemented
+# Machine Vision Concepts Implemented
 
-## ✅ RGB Channel Separation
+## RGB Channel Separation
 
 The system separates:
 
@@ -219,7 +220,7 @@ from the original image to analyze:
 
 ---
 
-## ✅ Image Segmentation
+## Image Segmentation
 
 Implemented segmentation pipeline:
 
@@ -237,7 +238,7 @@ Techniques used:
 
 ---
 
-## ✅ Morphological Operations
+## Morphological Operations
 
 Implemented:
 
@@ -257,7 +258,7 @@ cv2.morphologyEx(opened, cv2.MORPH_CLOSE, kernel)
 
 ---
 
-## ✅ Connected Components Analysis
+## Connected Components Analysis
 
 Object extraction performed using:
 
@@ -275,7 +276,7 @@ Extracted features:
 
 ---
 
-# 📷 RoboDK Integration
+# RoboDK Integration
 
 The project integrates RoboDK simulated cameras for:
 
@@ -288,7 +289,7 @@ The system captures snapshots from RoboDK and processes them in Python using Ope
 
 ---
 
-# 🤖 Robot-Camera Calibration
+# Robot-Camera Calibration
 
 A homography matrix was computed to map:
 
@@ -306,7 +307,7 @@ cv2.findHomography()
 
 ---
 
-# 🔬 Calibration Dataset
+# Calibration Dataset
 
 8-point calibration mapping used:
 
@@ -323,7 +324,7 @@ cv2.findHomography()
 
 ---
 
-# 🧮 Homography Matrix
+# Homography Matrix
 
 The generated transformation matrix:
 
@@ -337,7 +338,7 @@ H = np.array([
 
 ---
 
-# 📍 Pixel → Robot Coordinate Transformation
+# Pixel → Robot Coordinate Transformation
 
 ```python
 def pixel_to_robot(u, v, H):
@@ -353,7 +354,7 @@ def pixel_to_robot(u, v, H):
 
 ---
 
-# 📊 Validation Results
+# Validation Results
 
 | Metric | Result |
 |---|---|
@@ -372,7 +373,7 @@ The system achieved industrial-level accuracy suitable for:
 
 ---
 
-# 🔍 Segmentation Pipeline
+# Segmentation Pipeline
 
 ## Step 1 — Image Acquisition
 
@@ -462,7 +463,7 @@ MIN_AREA = 1244
 
 ---
 
-# 📈 Histogram Analysis
+# Histogram Analysis
 
 Histogram analysis was used to validate:
 
@@ -479,7 +480,7 @@ which enabled stable Otsu segmentation.
 
 ---
 
-# 🧪 Real Image Processing
+# Real Image Processing
 
 The pipeline was tested on:
 
@@ -493,9 +494,9 @@ The same pipeline generalized successfully across all datasets.
 
 ---
 
-# 🛠️ Features
+# Features
 
-## ✅ Interactive Dashboard
+## Interactive Dashboard
 
 The project includes a custom interactive dashboard featuring:
 
@@ -508,7 +509,7 @@ The project includes a custom interactive dashboard featuring:
 
 ---
 
-## ✅ Click-to-Map System
+## Click-to-Map System
 
 Users can click on image points to obtain:
 
@@ -520,7 +521,7 @@ in real time.
 
 ---
 
-# 📂 Repository Structure
+# Repository Structure
 
 ```text
 machine-vision-opencv/
@@ -547,7 +548,7 @@ machine-vision-opencv/
 └── calibration/
 ```
 
-# 📚 Academic Context
+# Academic Context
 
 This project combines concepts from:
 
@@ -566,7 +567,7 @@ Developed during coursework at:
 
 ---
 
-# 🔮 Future Improvements
+# Future Improvements
 
 Potential future developments:
 
@@ -583,7 +584,7 @@ Potential future developments:
 
 ---
 
-# 📖 Key Learning Outcomes
+# Key Learning Outcomes
 
 This project helped develop practical skills in:
 
