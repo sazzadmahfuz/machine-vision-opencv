@@ -521,52 +521,6 @@ in real time.
 
 ---
 
-# Repository Structure
-
-```text
-machine-vision-opencv/
-│
-├── index.html
-├── README.md
-├── requirements.txt
-├── LICENSE
-│
-├── Pictures/
-│   ├── 1 (1).png
-│   ├── 1 (2).png
-│   ├── 1 (3).png
-│   ├── 1 (4).png
-│   ├── 1 (5).png
-│   └── 1 (6).png
-│
-├── task-a.py
-├── task-b2.py
-├── segmentation_lab.py
-├── homography.py
-├── final_test.py
-│
-└── calibration/
-```
-
-# Academic Context
-
-This project combines concepts from:
-
-- Machine Vision
-- Robotics
-- Industrial Automation
-- Computer Vision
-- Coordinate Systems
-- Calibration Theory
-- Image Processing
-- Intelligent Systems
-
-Developed during coursework at:
-
-### Häme University of Applied Sciences (HAMK)
-
----
-
 # Future Improvements
 
 Potential future developments:
